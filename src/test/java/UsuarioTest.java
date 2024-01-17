@@ -3,6 +3,7 @@ import br.rs.leonardomelgarejo.barriga.domain.exceptions.ValidationException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvFileSource;
 import org.junit.jupiter.params.provider.CsvSource;
 
 import static builders.UsuarioBuilder.*;
@@ -47,12 +48,10 @@ public class UsuarioTest {
         assertEquals("Senha é obrigatória", exception.getMessage());
     }
 
-    @ParameterizedTest(name = "[{index}] - {4}")
-    @CsvSource(value = {
-            "1, NULL, user@mail.com, 12345678, Nome é obrigatório",
-            "1, Usuário Válido, NULL, 12345678, Email é obrigatório",
-            "1, Usuário Válido, user@mail.com, NULL, Senha é obrigatória"
-    }, nullValues = "NULL")
+//    @ParameterizedTest(name = "[{index}] - {4}")
+//    @CsvFileSource(files = "src/test/resources/camposObrigatoriosUsuario.csv", nullValues = "NULL", numLinesToSkip = 1)
+    @ParameterizedTest
+    @CsvFileSource(files = "src/test/resources/camposObrigatoriosUsuario.csv", nullValues = "NULL", useHeadersInDisplayName = true)
     public void deveValidarCamposObrigatorios(Long id, String nome, String email, String senha, String mensagem){
         ValidationException exception = assertThrows(ValidationException.class, () ->
         umUsuario().comId(id).comNome(nome).comEmail(email).comSenha(senha).agora());
